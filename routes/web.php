@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Taskcontroller;
+use App\Http\Controllers\Controller;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,18 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('dashboard');
+// });
+Route::get('/', [Controller::class, 'dashboard'])->name('dashboard');
+Route::post('/mark-complete', [TaskController::class, 'markAsCompleted']);
+Route::delete('/delete-completed-task/{completedTask}', [Taskcontroller::class,'delete'])->name('deleteCompletedTask');
+Route::delete('/delete-task/{Task}', [Taskcontroller::class,'deleteTask'])->name('deleteTask');
+Route::post('/store', [TaskController::class, 'store'])->name('store');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
